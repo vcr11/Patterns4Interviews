@@ -104,5 +104,3 @@
 
 ---
 
-## Practice shortlist
-- 0/1 Knapsack, Coin Change (min & count), House Robber (I/II), LIS, LCS, LPS, Edit Distance, Partition Equal Subset Sum, Target Sum, Unique Paths (+ obstacles), Min Path Sum.
