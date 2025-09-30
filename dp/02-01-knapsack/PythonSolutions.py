@@ -8,7 +8,7 @@ Each item can be taken at most once.
 
 Four approaches:
 1) recursion      : Brute-force DFS (O(2^n))
-2) memo           : Top-down DP with caching (O(n*m))
+2) memoization    : Top-down DP with caching (O(n*m))
 3) Tabulation     : Bottom-up 2-D DP (O(n*m) time, O(n*m) space)
 4) optimizedDp    : Bottom-up 1-D DP (O(n*m) time, O(m) space)
 """
