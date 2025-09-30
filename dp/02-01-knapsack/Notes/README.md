@@ -21,7 +21,7 @@ Because each item is indivisible: take it (1) or leave it (0).
 
 ## Two DP formulations
 
-### A) 2D (teaching form)
+### A) 2D 
 
 **State:** `dp[i][c]` = best value using the **first `i` items** with capacity `c`.
 **Transition:**
