@@ -1,313 +1,264 @@
----
-title: "Binary Search — The Hidden Art of Dividing and Conquering"
-description: "A story-driven guide that takes you from classic Binary Search confusion to mastering the invariant template through real LeetCode problems."
-author: "Chandra Shekar Reddy Vangala"
----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Binary Search — The Hidden Art of Dividing and Conquering</title>
+<style>
+  :root{
+    --bg:#0b0f14; --panel:#0f141b; --ink:#e6edf3; --muted:#9fb0c2;
+    --brand:#7dd3fc; --accent:#a78bfa; --ok:#34d399; --warn:#fbbf24; --bad:#fb7185;
+    --code-bg:#0a0f14; --code-border:#233142;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    --sans: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+  }
+  *{box-sizing:border-box}
+  html,body{background:var(--bg); color:var(--ink); margin:0; font-family:var(--sans); line-height:1.6}
+  .wrap{max-width:980px; margin:0 auto; padding:56px 20px 96px}
+  header.hero{
+    padding:36px 24px; border:1px solid #1f2937; border-radius:18px;
+    background: radial-gradient(1200px 600px at 20% -10%, #12202d 0, transparent 60%),
+                radial-gradient(1200px 600px at 120% 120%, #1b1330 0, transparent 60%),
+                var(--panel);
+    position:relative; overflow:hidden;
+  }
+  header.hero h1{margin:0 0 8px; font-size: clamp(32px, 4.5vw, 46px);}
+  header.hero p{margin:0; color:var(--muted); font-size:1.12rem}
+  .chip{display:inline-block; padding:6px 10px; border-radius:999px;
+        background:#17212b; color:#cde6ff; border:1px solid #294256; font-size:.85rem; margin-right:6px}
+  section{margin-top:42px; padding:24px 24px; background:var(--panel); border:1px solid #1f2937; border-radius:16px}
+  h2{margin:0 0 10px; font-size: clamp(22px, 3.5vw, 28px);}
+  h3{margin:22px 0 6px; font-size: clamp(18px, 3vw, 22px)}
+  p.lead{font-size:1.05rem; color:var(--muted)}
+  .note{border-left:4px solid var(--brand); padding:10px 14px; background:#0d151d; color:#cfe7ff; border-radius:8px; margin:14px 0}
+  .quote{font-style:italic; color:#cdd8e3; border-left:4px solid var(--accent); padding:10px 14px; background:#141826; border-radius:8px}
+  .grid{display:grid; gap:14px}
+  @media(min-width:800px){ .grid.two{grid-template-columns:1fr 1fr}}
+  code, pre{font-family:var(--mono); font-size:14px}
+  pre{
+    background:var(--code-bg); border:1px solid var(--code-border);
+    border-radius:14px; padding:16px 18px; overflow:auto;
+  }
+  .kbd{font-family:var(--mono); background:#121721; padding:2px 6px; border:1px solid #2a3544; border-radius:6px}
+  .pill{display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid #2b3647; background:#0e141c; color:#c2d2e3; font-size:.82rem}
+  table{width:100%; border-collapse:collapse; font-size:.95rem; margin-top:10px}
+  th,td{border:1px solid #203040; padding:10px 12px; vertical-align:top}
+  th{background:#111826}
+  .ok{color:var(--ok)} .bad{color:var(--bad)} .brand{color:var(--brand)} .accent{color:var(--accent)}
+  footer{margin-top:34px; color:#b8c6d6; text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
 
-# 🧠 Binary Search — The Hidden Art of Dividing and Conquering  
+  <header class="hero">
+    <div class="chip">DSA</div><div class="chip">Binary Search</div><div class="chip">Invariant Pattern</div>
+    <h1>Binary Search — The Hidden Art of Dividing and Conquering</h1>
+    <p>From classic confusion (<span class="kbd">&lt;</span> vs <span class="kbd">&lt;=</span>) to a single invariant template that solves <b>every</b> binary search problem.</p>
+  </header>
 
----
+  <section>
+    <h2>🌅 A Story Every Coder Knows</h2>
+    <p class="lead">
+      You write your first Binary Search in college. It works once, fails on the next case, and suddenly the
+      humble symbols <span class="kbd">&lt;</span> and <span class="kbd">&lt;=</span> feel like final bosses.
+    </p>
+    <div class="quote">“Why does changing one comparison fix a test and break three others?”</div>
+    <p>
+      Here’s the truth: Binary Search isn’t about the middle; it’s about <b>boundaries</b>. Once you think in boundaries,
+      you never memorize edge cases again—you <i>prove</i> them.
+    </p>
+  </section>
 
-## 🌅 A Story Every Coder Knows
-
-You write your first Binary Search in college.  
-It works once. Then fails miserably on the next test case.  
-
-You stare at your code… wondering:  
-> “Why is it always the `<` or `<=` that betrays me?”  
-
-You fix one.  
-Another breaks.  
-Soon, you’re not debugging a program — you’re questioning your existence. 😅  
-
-If that sounds familiar — welcome, my friend.  
-You’re about to see **Binary Search** not as an algorithm,  
-but as a **philosophy**.
-
----
-
-## 🌌 The Ancient Wisdom of Binary Search
-
-Binary Search doesn’t rush.  
-It doesn’t panic.  
-It simply looks at the middle of chaos and calmly says:  
-> “Half of you are irrelevant.” ⚔️  
-
-That’s why its time complexity is **O(log n)**.  
-It keeps cutting the problem in half until only truth remains.  
-
----
-
-## ⚙️ The Classic Way (The One Everyone Starts With)
-
-```python
-def binary_search(nums, target):
+  <section>
+    <h2>⚙️ The Classic Way (The One Everyone Starts With)</h2>
+<pre><code>def binary_search(nums, target):
     l, r = 0, len(nums) - 1
-    while l <= r:
+    while l &lt;= r:
         mid = (l + r) // 2
         if nums[mid] == target:
             return mid
-        elif nums[mid] < target:
+        elif nums[mid] &lt; target:
             l = mid + 1
         else:
             r = mid - 1
     return -1
-```
+</code></pre>
+    <p>Beautiful—until you’re asked: <em>“Find the first element ≥ x.”</em> Suddenly the cousins <span class="kbd">&lt;</span> and <span class="kbd">&lt;=</span> start a family feud.</p>
+  </section>
 
-Beautiful, right?  
-But then someone asks:  
-> “Find the first element greater than or equal to `x`.”
+  <section>
+    <h2>💡 The Real Secret: The Invariant</h2>
+    <p>We maintain two zones and never break them:</p>
+    <div class="grid two">
+      <div class="note"><b>🟥 Left zone</b> — always <b>False</b> (invalid)</div>
+      <div class="note"><b>🟩 Right zone</b> — always <b>True</b> (valid)</div>
+    </div>
+    <p>We shrink the gap until they touch. The first index in the True zone is the answer.</p>
 
-And suddenly, your `<` and `<=` start fighting like rival cousins. 🤯  
-
----
-
-## 💡 The Real Secret: The Invariant
-
-Binary Search isn’t about `mid`.  
-It’s about **boundaries**.
-
-Imagine two zones:
-
-* 🟥 **Left zone** — always **False** (invalid)
-* 🟩 **Right zone** — always **True** (valid)
-
-Your invariant is simple:
-> Left is False, Right is True.  
-> Shrink the gap until they touch.
-
-That’s it.  
-That’s Binary Search in its purest form.  
-
----
-
-## 🧘‍♂️ The One Template To Rule Them All
-
-```python
-def binary_search_invariant(predicate, lo, hi):
-    l, r = lo - 1, hi + 1     # l = False zone, r = True zone
-    while r > l + 1:
+<pre><code>def binary_search_invariant(predicate, lo, hi):
+    l, r = lo - 1, hi + 1      # l = False, r = True
+    while r &gt; l + 1:
         mid = (l + r) // 2
         if predicate(mid):
-            r = mid            # mid satisfies → True zone shrinks
+            r = mid            # mid is True → pull right in
         else:
-            l = mid            # mid fails → False zone expands
-    return r                   # first True
-```
+            l = mid            # mid is False → push left out
+    return r                    # first True
+</code></pre>
+    <p class="lead">Every binary search problem is just this loop with a different <b>predicate(mid)</b>.</p>
+  </section>
 
-That’s it.  
-One loop. Infinite possibilities.  
+  <!-- EXAMPLES -->
+  <section>
+    <h2>🔮 Enlightenment Through Examples</h2>
 
-Every Binary Search problem you’ve ever seen is just this loop  
-with a different **predicate**.
-
----
-
-## 🔮 The Enlightenment Through Examples
-
-### 🍌 Koko Eating Bananas
-
-> "If Koko eats `k` bananas/hour — can she finish in time?"
-
-We’re finding the **minimum valid speed** → the first `k` where she finishes on time.
-
-```python
-import math
+    <h3>🍌 875. Koko Eating Bananas (min valid speed)</h3>
+    <p>Question in English: <i>If Koko eats at speed k, can she finish in ≤ h hours?</i> Find the first speed where the answer is True.</p>
+<pre><code>import math
 
 class Solution:
     def minEatingSpeed(self, piles, h):
         left, right = 0, max(piles) + 1
-        while right > left + 1:
+        while right &gt; left + 1:
             mid = (left + right) // 2
             hours = 0
             for p in piles:
                 hours += math.ceil(p / mid)
-            if hours <= h:
-                right = mid     # valid speed
+            if hours &lt;= h:
+                right = mid     # valid (True)
             else:
-                left = mid      # too slow
+                left = mid      # invalid (False)
         return right
-```
+</code></pre>
 
-🧩 *Left = invalid speeds (too slow), Right = valid speeds.*
-
----
-
-### 🎯 Find First and Last Position of Element (LeetCode 34)
-
-Find both boundaries — the **first index >= target** and the **last index <= target**.
-
-```python
-class Solution:
+    <h3>🎯 34. Find First and Last Position of Element</h3>
+    <p>Two boundaries: first index <b>≥ target</b> and first index <b>&gt; target</b> (then subtract 1).</p>
+<pre><code>class Solution:
     def searchRange(self, nums, target):
         n = len(nums)
         if n == 0:
             return [-1, -1]
 
-        # Find first index >= target
+        # First index >= target
         left, right = -1, n
-        while right > left + 1:
+        while right &gt; left + 1:
             mid = (left + right) // 2
             if nums[mid] >= target:
                 right = mid
             else:
                 left = mid
         first = right
-
         if first == n or nums[first] != target:
             return [-1, -1]
 
-        # Find last index <= target
+        # First index > target → last = right - 1
         left, right = -1, n
-        while right > left + 1:
+        while right &gt; left + 1:
             mid = (left + right) // 2
-            if nums[mid] > target:
+            if nums[mid] &gt; target:
                 right = mid
             else:
                 left = mid
         last = right - 1
         return [first, last]
-```
+</code></pre>
 
-🧩 *First and last True zone boundaries in one shot.*
-
----
-
-### 🏔️ Find Peak Element (LeetCode 162)
-
-The peak is the point where the slope flips from rising to falling.
-
-```python
-class Solution:
+    <h3>🏔️ 162. Find Peak Element</h3>
+    <p>True zone starts when slope turns down: <span class="kbd">nums[mid] &gt; nums[mid+1]</span>.</p>
+<pre><code>class Solution:
     def findPeakElement(self, nums):
         left, right = -1, len(nums) - 1
-        while right > left + 1:
+        while right &gt; left + 1:
             mid = (left + right) // 2
-            if nums[mid] > nums[mid + 1]:
-                right = mid     # descent starts → True zone
+            if nums[mid] &gt; nums[mid + 1]:
+                right = mid     # in (or beyond) the peak
             else:
-                left = mid      # still ascending
+                left = mid      # still climbing
         return right
-```
+</code></pre>
 
-🧩 *Left = ascending zone (False), Right = peak or descending (True).*
-
----
-
-### 🔄 Search in Rotated Sorted Array (LeetCode 33)
-
-This one mixes order logic — but same Binary Search spirit.  
-You just decide *which half* is sorted and move accordingly.
-
-```python
-class Solution:
+    <h3>🔁 33. Search in Rotated Sorted Array</h3>
+    <p>Rotation breaks monotonic predicate, but we still delete half confidently by choosing the sorted side.</p>
+<pre><code>class Solution:
     def search(self, nums, target):
         l, r = 0, len(nums) - 1
-        while l <= r:
+        while l &lt;= r:
             mid = (l + r) // 2
             if nums[mid] == target:
                 return mid
-
-            if nums[l] <= nums[mid]:  # left half sorted
-                if nums[l] <= target < nums[mid]:
+            if nums[l] &lt;= nums[mid]:           # left half sorted
+                if nums[l] &lt;= target &lt; nums[mid]:
                     r = mid - 1
                 else:
                     l = mid + 1
-            else:  # right half sorted
-                if nums[mid] < target <= nums[r]:
+            else:                               # right half sorted
+                if nums[mid] &lt; target &lt;= nums[r]:
                     l = mid + 1
                 else:
                     r = mid - 1
         return -1
-```
+</code></pre>
 
-🧩 *Invariant isn’t purely monotonic — but principle is identical: eliminate half with certainty.*
-
----
-
-### 🚢 Capacity to Ship Packages Within D Days (LeetCode 1011)
-
-We must find **minimum ship capacity** that delivers all packages within `D` days.
-
-```python
-class Solution:
+    <h3>🚢 1011. Capacity to Ship Packages Within D Days</h3>
+    <p>Predicate: with capacity <b>C</b>, can we ship within <b>D</b> days? Find first True.</p>
+<pre><code>class Solution:
     def shipWithinDays(self, weights, days):
         left, right = 0, sum(weights) + 1
-        while right > left + 1:
+        while right &gt; left + 1:
             mid = (left + right) // 2
-            day_count = 1
-            current = 0
+            day_count, curr = 1, 0
             for w in weights:
-                if current + w > mid:
+                if curr + w &gt; mid:
                     day_count += 1
-                    current = 0
-                current += w
-            if day_count <= days:
+                    curr = 0
+                curr += w
+            if day_count &lt;= days:
                 right = mid     # valid capacity
             else:
                 left = mid      # too small
         return right
-```
+</code></pre>
 
-🧩 *Left = invalid capacities (too small), Right = valid capacities.*
-
----
-
-### 📚 Split Array Largest Sum (LeetCode 410)
-
-Same as shipping packages — but generalized.  
-Find minimum possible largest sum after splitting array into `k` parts.
-
-```python
-class Solution:
+    <h3>📚 410. Split Array Largest Sum</h3>
+    <p>Same structure as shipping: smallest possible “largest subarray sum” with ≤ k groups.</p>
+<pre><code>class Solution:
     def splitArray(self, nums, k):
         left, right = 0, sum(nums) + 1
-        while right > left + 1:
+        while right &gt; left + 1:
             mid = (left + right) // 2
-            groups = 1
-            current = 0
-            for n in nums:
-                if current + n > mid:
+            groups, curr = 1, 0
+            for x in nums:
+                if curr + x &gt; mid:
                     groups += 1
-                    current = 0
-                current += n
-            if groups <= k:
-                right = mid    # valid largest sum
+                    curr = 0
+                curr += x
+            if groups &lt;= k:
+                right = mid     # valid bound
             else:
-                left = mid     # too small, need higher sum limit
+                left = mid      # too tight
         return right
-```
+</code></pre>
+  </section>
 
-🧩 *Left = invalid splits (too many groups), Right = valid ones.*
+  <section>
+    <h2>🧭 What to Remember (so you never fear &lt; vs &lt;= again)</h2>
+    <table>
+      <thead><tr><th>Pattern</th><th>False (Left)</th><th>True (Right)</th><th>Return</th></tr></thead>
+      <tbody>
+        <tr><td>First ≥ x</td><td>&lt; x</td><td>≥ x</td><td><span class="brand">r</span></td></tr>
+        <tr><td>Last ≤ x</td><td>≤ x</td><td>&gt; x</td><td><span class="brand">r - 1</span></td></tr>
+        <tr><td>Min valid speed/capacity</td><td>invalid</td><td>valid</td><td><span class="brand">r</span></td></tr>
+        <tr><td>Peak</td><td>increasing</td><td>descending (incl. peak)</td><td><span class="brand">r</span></td></tr>
+      </tbody>
+    </table>
+    <p class="quote">Binary Search doesn’t care about your feelings — only your boundaries.</p>
+  </section>
 
----
+  <footer>
+    #HappyCoding ✨ · Binary Search · Invariants · LeetCode · Python
+  </footer>
+</div>
+</body>
+</html>
 
-## 🧩 The Summary Table
-
-| Problem | False Zone | True Zone | What We’re Finding |
-|----------|-------------|-----------|--------------------|
-| First & Last Position | `< target` | `>= target` / `> target` | Boundary indices |
-| Rotated Search | Unsorted side | Sorted side | Target index |
-| Find Peak | Increasing slope | Decreasing slope | Peak index |
-| Koko Eating Bananas | Too slow | Fast enough | Minimum speed |
-| Ship Packages | Too small | Big enough | Minimum capacity |
-| Split Array | Too small | Valid | Minimum largest sum |
-
----
-
-## 🌟 Final Thoughts
-
-Binary Search isn’t magic.  
-It’s structure.  
-It’s trust in your invariant.
-
-Once you define your False and True zones,  
-you stop guessing and start reasoning.  
-
-Every time you call `while r > l + 1`,  
-you’re not looping — you’re converging on truth. ✨  
-
-> “Binary Search doesn’t care about your feelings — only your boundaries.”  
-
-#HappyCoding 💻  
-#BinarySearch #LeetCode #Algorithms #LearningInPublic #Python #CS #SoftwareEngineering
