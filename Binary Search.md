@@ -12,7 +12,6 @@ Absolutely—here’s a **single, GitHub-friendly MDX file** you can copy-paste 
 ---
 title: "Binary Search — The Hidden Art of Dividing and Conquering"
 description: "From classic confusion (< vs <=) to one invariant template that solves every binary search problem."
-author: "Chandra Shekar Reddy Vangala"
 tags: [DSA, Binary Search, Invariants, Python, LeetCode]
 ---
 
@@ -300,12 +299,6 @@ Once you guard the invariant, the answers walk to you.
 **#HappyCoding ✨**
 *Binary Search • Invariants • Python • LeetCode • Systematic Thinking*
 
-```
 
----
-
-Want me to add a **minimal live playground** (Next.js + MDX page + copy button) or convert this into a **Notion page** with the same sections and anchor links?
-::contentReference[oaicite:0]{index=0}
-```
 
 
