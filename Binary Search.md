@@ -1,10 +1,3 @@
-Absolutely—here’s a **single, GitHub-friendly MDX file** you can copy-paste as `binary-search-invariants.mdx`.
-
-* It renders cleanly on **GitHub, Notion MDX, Next.js MDX, Docusaurus** (no fancy CSS required).
-* Tone is human + narrative, but the code is interview-ready.
-* Includes clean, **invariant template** and **all 6 problems** solved (no lambdas).
-* Problem links included.
-* Uses the `r > l + 1` pattern consistently.
 
 ---
 
